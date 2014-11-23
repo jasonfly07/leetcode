@@ -1,103 +1,48 @@
 #include <iostream>
-#include <limits>
+#include <stack>
 using namespace std;
-
-
-
-
-
 
 class MinStack{
 public:
-    struct ListNode {
-        int val;
-        ListNode *next;
-        ListNode(int x) : val(x), next(NULL) {}
-    };
-
     MinStack(){
-        head = NULL;
-        minHead = NULL;
-    }
-
-    bool isEmpty(){
-        return (head == NULL)? true: false;
     }
 
     void push(int x){
-        ListNode* newNode = new ListNode(x);
-        if(isEmpty() || (newNode->val <= minHead->val)){
-            ListNode* newMin = new ListNode(newNode->val);
-            newMin->next = minHead;
-            minHead = newMin;
+        if(mainStack.empty() || x<=minStack.top()){
+            minStack.push(x);
         }
-        newNode->next = head;
-        head = newNode;
+        mainStack.push(x);
     }
 
     void pop(){
-        ListNode* temp = head;
-        head = head->next;
-
-        if(temp->val == minHead->val){
-            ListNode* minTemp = minHead;
-            minHead = minHead->next;
-            delete[] minTemp;
+        if(mainStack.top()==minStack.top()){
+            minStack.pop();
         }
-        
-        delete[] temp;
+        mainStack.pop();
     }
 
     int top(){
-        return head->val;
+        return mainStack.top();
     }
 
     int getMin(){
-        return minHead->val;
-    }
-
-    void printStack(){
-        ListNode* iter1 = head;
-
-        cout << "Stack: ";
-        while(iter1!=NULL){
-            cout << iter1->val << ",";
-            iter1 = iter1->next;
-        }
-        cout << endl;
-
-        cout << "Min: ";
-        ListNode* iter2 = minHead;
-        while(iter2!=NULL){
-            cout << iter2->val << ",";
-            iter2 = iter2->next;
-        }
-        cout << endl;
+        return minStack.top();
     }
 
 private:
-    ListNode* minHead;
-    ListNode* head;
+    stack<int> mainStack;
+    stack<int> minStack;
 };
 
 int main(){
 
     MinStack ms1;
-    ms1.push(2);
     ms1.push(0);
-    ms1.push(3);
+    ms1.push(1);
     ms1.push(0);
     // ms1.printStack();
     cout << ms1.getMin() << endl << endl;
-    
-    ms1.pop();
-    // ms1.printStack();
-    cout << ms1.getMin() << endl << endl;
-    
-    ms1.pop();
-    // ms1.printStack();
-    cout << ms1.getMin() << endl << endl;
-    
+    // cout << ms1.top() << endl << endl;
     ms1.pop();
     cout << ms1.getMin() << endl << endl;
 
