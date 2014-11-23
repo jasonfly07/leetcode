@@ -1,3 +1,8 @@
+// This problem consists of some sub-problems that are great practices
+// for array manipulation.
+// 1. Seperate positive elements from negative ones.
+// 2. Using the array itself to store information.
+
 #include <iostream>
 #include <cmath>
 using namespace std;
