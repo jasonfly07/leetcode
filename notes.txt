@@ -1,0 +1,30 @@
+operator overloading is better done outside the object
+http://stackoverflow.com/questions/4652932/why-define-operator-or-outside-a-class-and-how-to-do-it-properly
+
+what is namespace again?
+
+what is cstdio?
+
+
+1. Private Inheritance 
+The Public and protected members of Base class become private members of the derived class.
+2. Public Inheritance 
+All the public members and protected members are inherited as public and protected respectively.
+3. Protected Inheritance 
+Public and Protected members are derived as protected members.
+
+If a base class has a pure virtual function, the entire class becomes an abstract class
+and there would be compile error if we create such a class.
+
+virtual inheritance to achieve diamond shape structure
+http://stackoverflow.com/questions/2659116/how-does-virtual-inheritance-solve-the-diamond-problem
+
+"object slicing"
+
+print out the inheritance pdf
+
+
+
+either
+template<class T> or template<typename T>
+is fine
