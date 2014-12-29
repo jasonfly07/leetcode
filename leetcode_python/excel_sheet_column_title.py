@@ -4,7 +4,7 @@ import math
 class Solution:
     # This is called "bijective base-26 conversion" (1-26 instead of 0-25)
     # Due to the lack of 0, we deduct 1 from num everytime we shift to the next digit
-    # it's a bit unintuitive to understand.
+    # it's a bit unintuitive.
     def convertToTitle(self, num):
         output = ""
 
