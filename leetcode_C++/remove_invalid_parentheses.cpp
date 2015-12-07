@@ -2,7 +2,9 @@
 #include <vector>
 #include <string>
 #include <unordered_set>
+#include <queue>
 
+// A simple utility that checks whether s is a valid expression
 bool IsValidParentheses(const std::string& s) {
   int score = 0;
   for (char c : s) {
@@ -19,61 +21,57 @@ bool IsValidParentheses(const std::string& s) {
   return (score == 0) ? true : false;
 }
 
+// BFS: search level by level. Start with level 0 (don't remove any parenthesis)
+// if invalid, produce all possible strings in level 1 (remove 1 parenthesis)
+// if still no valid strings, go down to level 2 (remove 2 parentheses), so on so forth
 std::vector<std::string> removeInvalidParentheses(std::string s) {
   std::vector<std::string> output;
 
-  // Remove all leading ')'
-  // If startInd is unchanged, return an empty output.
-  int startInd = -1;
-  for (int i = 0; i < s.length(); i++) {
-    if (s[i] != ')') {
-      startInd = i;
+  // stores all solutions
+  std::unordered_set<std::string> found;
+
+  // store all candidates in the current level 
+  std::unordered_set<std::string> candidates;
+  candidates.insert(s);
+
+  // BFS
+  while (!candidates.empty()) {
+    // Make a copy of the candidate list
+    std::unordered_set<std::string> candidatesCopy(candidates);
+    candidates.clear();
+
+    // iterate through all candidates in current level
+    for (auto& currStr : candidatesCopy) {
+
+      // If the current string is valid, store it in found
+      if (IsValidParentheses(currStr)) {
+        found.insert(currStr);
+      }
+      // If invalid, take away one parenthesis and add it to the candidate list
+      // Note that this step is not needed if we already found some solutions in 
+      // the current level
+      else {
+        if (!found.empty()) continue;
+        for (int k = 0; k < currStr.length(); k++) {
+          if (currStr[k] == '(' || currStr[k] == ')') {
+            std::string newStr = currStr.substr(0, k) + currStr.substr(k + 1);
+            if (candidates.count(newStr) == 0) {
+              candidates.insert(newStr);
+            }
+          }
+        }
+      }
+    }
+
+    if (found.size() > 0) {
       break;
-    }  
-  }
-  if (startInd == -1) {
-    return output;
-  }
-  s = s.substr(startInd, s.length() - startInd);
-
-  // Remove all trailing '('
-  // Likewise, if endInd is unchanged, return an empty output.
-  int endInd = -1;
-  for (int i = s.length() - 1; i >= 0; i--) {
-    if (s[i] != '(') {
-      endInd = i;
-      break;
-    }  
-  }
-  if (endInd == -1) {
-    return output;
-  }
-  s = s.substr(0, endInd + 1);
-
-  // Compute the accumulated score: 
-  // '(' = +1, ')' = -1
-  int score = 0;
-  for (int i = 0; i < s.length(); i++) {
-    switch (s[i]) {
-      default:
-        break;
-      case '(':
-        score++;
-        break;
-      case ')':
-        score--;
-        break;
-    } 
+    }
   }
 
-  // if score = 0, return s
-  if (score == 0) {
+  // Move all solutions back to the output vector
+  for (const std::string& s : found) {
     output.push_back(s);
-    return output;
   }
-
-  // Set the target to be removed based on the sign of score
-  const char tar = score > 0 ? '(' : ')';
 
   return output;
 }
@@ -81,15 +79,14 @@ std::vector<std::string> removeInvalidParentheses(std::string s) {
 int main() {
 
   std::string s = ")))(a())()b((()((";
-  // std::string s = "((a())b)()c";
+  // std::string s = "(a)())()";
+  // std::string s = ")(";
 
-  // auto output = removeInvalidParentheses(s);
+  auto output = removeInvalidParentheses(s);
 
-  // for (auto s : output) {
-  //   std::cout << s << std::endl;
-  // }
-
-  std::cout << IsValidParentheses(s) << std::endl;
+  for (auto s : output) {
+    std::cout << s << std::endl;
+  }
 
 
   return 0;
